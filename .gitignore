@@ -1,0 +1,20 @@
+# 環境變數與金鑰 (最重要！)
+.env
+
+# Python 快取與虛擬環境
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# 資料庫與日誌
+*.log
+*.sqlite
+
+# 作業系統暫存檔
+.DS_Store
+Thumbs.db
+
+# Docker 相關 (如果你不希望某些本地設定被包進去)
+.dockerignore
