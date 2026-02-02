@@ -24,7 +24,6 @@ def test():
         create_sql = """
         CREATE TABLE IF NOT EXISTS comments (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(50) NOT NULL,
             content TEXT NOT NULL,
             image_url VARCHAR(255),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -33,7 +32,7 @@ def test():
         cur.execute(create_sql)
         print("TABLE 建立成功")
 
-        cur.execute("INSERT INTO comments (username, content) VALUES (%s, %s)", ('kuan', '我的留言'))
+        cur.execute("INSERT INTO comments (content) VALUES (%s)", ('我的留言',))
         conn.commit()
         print("留言寫入成功")
 

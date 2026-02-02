@@ -1,6 +1,12 @@
 from fastapi import *
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+import uuid
+from dotenv import load_dotenv
+load_dotenv()
+from s3_utils import upload_s3
+from database import get_conn
+
 
 app=FastAPI()
 
@@ -14,13 +20,27 @@ def index(request: Request):
 @app.post("/api/upload")
 async def create_post(
     content: str = Form(...),
-    image: UploadFile = File(...)
+    image: UploadFile = File(...),
+    conn = Depends(get_conn)
 ):
     
-    filename = image.filename
-    img = await image.read()
+    file_extension = image.filename.split('.')[-1] # 抓最後一個副檔名
+    file_name = f"{uuid.uuid4()}.{file_extension}" # 組一個不會撞名的檔名
+    
+    # 直接將 image.file (檔案物件) 傳給 S3 工具函數
+    img_url = upload_s3(image.file, file_name)
+    if not img_url:
+        raise HTTPException(status_code=500, detail='Fail to upload to S3')
 
-    print(f"收到文字{content}")
-    print(f"收到圖片{filename}，大小{len(img)}bytes")
+    try:
+        cur = conn.cursor()
+        sql = "INSERT INTO comments(content, image_url) VALUES(%s, %s)"
+        cur.execute(sql, (content, img_url))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"資料庫寫入失敗: {e}")
+    finally:
+        cur.close()
 
-    return
+    return {"ok":True}

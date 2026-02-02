@@ -5,3 +5,4 @@ DBUtils
 pymysql
 cryptography
 python-multipart
+boto3
