@@ -5,7 +5,7 @@ import uuid
 from dotenv import load_dotenv
 load_dotenv()
 from s3_utils import upload_s3
-from database import get_conn
+from database import get_conn, get_cur
 
 
 app=FastAPI()
@@ -44,3 +44,14 @@ async def create_post(
         cur.close()
 
     return {"ok":True}
+
+@app.get("/api/get-post")
+def get_post(cur = Depends(get_cur)):
+    try:
+        cur.execute("SELECT content, image_url FROM comments ORDER BY created_at ASC")
+        rows = cur.fetchall()
+        if not rows:
+            return {"data": None}
+        return rows
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"資料庫查詢失敗: {e}")

@@ -1,4 +1,7 @@
-
+function startup(){
+    bindSubmitBtn();
+    renderindex();
+}
 
 function bindSubmitBtn(){
     const form = document.getElementById('submit-form');
@@ -35,4 +38,36 @@ function bindSubmitBtn(){
     });
 }
 
-bindSubmitBtn()
+async function renderindex(){
+    const first_divider = document.getElementById('first-divider');
+    try{
+        const res = await fetch("/api/get-post");
+        const body = await res.json();
+        console.log(body);
+        if (!body){
+            const msg = document.createElement('h3');
+            msg.textContent = '尚無貼文';
+            return
+        }else{
+            body.forEach((b) => {
+                const container = document.createElement('div');
+                const content = document.createElement('div');
+                const img = document.createElement('img');
+                const divider = document.createElement('hr');
+
+                content.textContent = b.content;
+                img.src = b.image_url;
+                divider.classList.add('divider');
+                container.appendChild(content);
+                container.appendChild(img);
+                container.appendChild(divider);
+                first_divider.after(container);
+            });
+        }
+    }catch(e){
+        console.log(e);
+    }
+    
+}
+
+startup();
