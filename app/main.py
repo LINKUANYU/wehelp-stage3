@@ -4,17 +4,17 @@ from fastapi.staticfiles import StaticFiles
 import uuid
 from dotenv import load_dotenv
 load_dotenv()
-from s3_utils import upload_s3
-from database import get_conn, get_cur
+from app.s3_utils import upload_s3
+from app.database import get_conn, get_cur
 
 
 app=FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"))
+app.mount("/static", StaticFiles(directory="app/static"))
 
 @app.get("/", include_in_schema=False)
 def index(request: Request):
-    return FileResponse("./static/index.html", media_type="text/html")
+    return FileResponse("./app/static/index.html", media_type="text/html")
 
 
 @app.post("/api/upload")
