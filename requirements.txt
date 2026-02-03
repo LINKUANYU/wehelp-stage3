@@ -1,3 +1,8 @@
+fastapi
+uvicorn
+python-dotenv
 DBUtils
 pymysql
 cryptography
+python-multipart
+boto3

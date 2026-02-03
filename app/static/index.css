@@ -1,0 +1,11 @@
+.title{
+    color: blue;
+}
+.divider{
+    width: 100%; height: 1px;
+    color: gray;
+    margin: 20px 0px;
+}
+img{
+    width: 200px; height: 200px;
+}
