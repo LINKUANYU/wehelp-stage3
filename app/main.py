@@ -28,7 +28,7 @@ async def create_post(
     file_name = f"{uuid.uuid4()}.{file_extension}" # 組一個不會撞名的檔名
     
     # 直接將 image.file (檔案物件) 傳給 S3 工具函數
-    img_url = upload_s3(image.file, file_name)
+    img_url = upload_s3(image.file, file_name, image.content_type)
     if not img_url:
         raise HTTPException(status_code=500, detail='Fail to upload to S3')
 

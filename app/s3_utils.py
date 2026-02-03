@@ -20,9 +20,17 @@ s3 = boto3.client(
     region_name = REGION
 )
 
-def upload_s3(file_obj, object_name):
+def upload_s3(file_obj, object_name, content_type):
     try:
-        s3.upload_fileobj(file_obj, BUCKET_NAME, object_name)
+        s3.upload_fileobj(
+            file_obj, 
+            BUCKET_NAME, 
+            object_name,
+            ExtraArgs={
+                "ContentType": content_type,  # 告訴瀏覽器這是圖片
+                "CacheControl": "max-age=2592000"  # 選配：快取 30 天
+            }
+        )
         img_url = (f"https://{MY_DOMAIN}/{object_name}")
         return img_url
     except Exception as e:
