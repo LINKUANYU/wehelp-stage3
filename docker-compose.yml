@@ -1,6 +1,6 @@
 services:
   web:
-    image: ${{ secrets.DOCKERHUB_USERNAME }}/week1:latest
+    image: linkuankuan/week1:latest
     restart: always
     expose:
       - "8000"
