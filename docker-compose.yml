@@ -13,15 +13,13 @@ services:
           memory: 350M # 每個分身最多用 350MB，兩個剛好 700MB
     # ----------------------
 
-  nginx:
+nginx:
     image: nginx:latest
     container_name: nginx_proxy
     restart: always
     ports:
-      - "80:80"
-      - "443:443"  # 新增 443 埠
+      - "80:80"  # 只需要對應 80 埠，443 埠現在由 ALB 負責
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro  # 關鍵：讓容器讀取 EC2 上的憑證
     depends_on:
       - web
