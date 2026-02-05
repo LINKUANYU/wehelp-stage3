@@ -12,7 +12,7 @@ app=FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"))
 
-@app.get("/", include_in_schema=False)
+@app.get("/", methods=["GET", "HEAD"], include_in_schema=False)
 def index(request: Request):
     return FileResponse("./app/static/index.html", media_type="text/html")
 
