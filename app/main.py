@@ -12,8 +12,8 @@ app=FastAPI()
 
 app.mount("/static", StaticFiles(directory="app/static"))
 
-@app.get("/", methods=["GET", "HEAD"], include_in_schema=False)
-def index(request: Request):
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
+async def index(request: Request):
     return FileResponse("./app/static/index.html", media_type="text/html")
 
 
