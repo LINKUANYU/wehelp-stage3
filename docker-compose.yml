@@ -13,7 +13,7 @@ services:
           memory: 350M # 每個分身最多用 350MB，兩個剛好 700MB
     # ----------------------
 
-nginx:
+  nginx:
     image: nginx:latest
     container_name: nginx_proxy
     restart: always
