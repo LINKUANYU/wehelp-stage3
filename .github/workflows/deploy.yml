@@ -36,13 +36,17 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # 1. 進入目錄
             cd ~/week1/wehelp-stage3
-            # 2. 拉取 GitHub 上最新的設定檔 (docker-compose, nginx.conf)
-            git pull origin main
-            # 3. 拉取 Docker Hub 上最新的 Image
+            # 1. 強制同步 GitHub 上的最新檔案
+            git fetch --all
+            git reset --hard origin/main
+            # 2. 拉取最新的 Docker Image
             docker compose pull
-            # 4. 啟動 (限制 scale=2 比較安全)
-            docker compose up -d --scale web=2
-            # 5. 清理舊 Image 避免硬碟又爆掉
+            # 3. 啟動/更新容器
+            # --force-recreate 會強制刪除舊容器並根據新設定建立新容器
+            docker compose up -d --scale web=2 --force-recreate
+            # 4. 【新增】強制讓 nginx 服務重新啟動
+            # 這樣可以確保掛載的 .conf 檔案被重新讀取
+            docker compose restart nginx
+            # 5. 清理舊 Image
             docker image prune -f
